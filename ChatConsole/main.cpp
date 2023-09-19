@@ -4,18 +4,17 @@
 #include "chat.h"
 
 
-
 int main()
 {
 	setlocale(LC_ALL, "");
 
 	const int lenght = 20;
-	User usr({}, {}, lenght);
+	User usr(lenght);
 	usr.setUser("Denis", 0);
 	usr.setPassword("111", 0);
 	usr.setUser("Julia", 1);
 	usr.setPassword("000", 1);
-	Chat chat({}, {}, {}, 0);
+	Chat chat(0);
 	chat.setMail("Chat", "all", "Добро пожаловать в чат!");
 	chat.setMail("Denis", "all", "Добрый день, меня зовут Денис.");
 	chat.setMail("Julia", "all", "Добрый день, я Юля :)");

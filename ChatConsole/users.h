@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 
 class User
 {
@@ -9,40 +9,12 @@ private:
     std::string* _password{};
 
 public:
-    User() = default;
-    User(std::string user_name, std::string password, int lenght)
-    {
-        _lenght = lenght;
-        _user_name = new std::string[lenght]{};
-        _password = new std::string[lenght]{};
-    }
-    ~User()
-    {
-        delete[] _user_name;
-        delete[] _password;
-    }
+    User(int lenght);
+    User(std::string user_name, std::string password, int lenght);
+    ~User();
 
-    std::string getUser(int i) const
-    {
-        if (i >= 0 && i < _lenght)
-        {
-            return _user_name[i];
-        }
-    }
-
-    std::string getPassword(int i) const
-    {
-        if (i >= 0 && i < _lenght)
-        {
-            return _password[i];
-        }
-    }
-    void setUser(std::string user_name, int i)
-    {
-        _user_name[i] = user_name;
-    }
-    void setPassword(std::string password, int i)
-    {
-        _password[i] = password;
-    }
+    std::string getUser(int i) const;
+    std::string getPassword(int i) const;
+    void setUser(std::string user_name, int i);
+    void setPassword(std::string password, int i);
 };
