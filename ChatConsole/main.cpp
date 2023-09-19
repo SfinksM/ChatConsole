@@ -1,75 +1,80 @@
 #include <iostream>
 #include <string>
-
-
-
-using namespace std;
-
-class User {
-public:
-    User(std::string user_name, std::string password) : _user_name(user_name), _password(password) {}
-    ~User() {};
-
-
-private:
-    std::string _user_name;
-    std::string _password;
-};
-
-void reg_new_user()
-{
-    string name, pass;
-    cout << "Введите ваше имя: ";
-    cin >> name;
-    cout << "\nПридумайте пароль: ";
-    cin >> pass;
-    User(name, pass);
-    //enter_chat();
-}
-
-void user()
-{
-    cout << "\nВыбирите необходимое действие:\n 1) Регисрация\n 2) Вход\n";
-    string option;
-    cin >> option;
-    int option_id;
-
-    try
-    {
-        option_id = stoi(option);
-
-    }
-    catch (const std::exception& e)
-    {
-        std::cout << "Выбор 1 или 2, других вариантов нет, сделайте правильный выбор!" << std::endl;
-        user();
-    }
-
-    switch (option_id) {
-    case 1:
-        reg_new_user();
-        break;
-    case 2:
-        //enter_chat();
-        break;
-    default:
-        std::cout << "Выбор 1 или 2, других вариантов нет, сделайте правильный выбор!" << std::endl;
-        break;
-    };
-}
-
-
+#include "users.h"
+#include "chat.h"
 
 
 
 int main()
 {
-    setlocale(LC_ALL, "");
+	setlocale(LC_ALL, "");
 
-	cout << "Добро пожаловать в чат!\n";
-    user();
-    //chat();
+	const int lenght = 20;
+	User usr({}, {}, lenght);
+	usr.setUser("Denis", 0);
+	usr.setPassword("111", 0);
+	usr.setUser("Julia", 1);
+	usr.setPassword("000", 1);
+	Chat chat({}, {}, {}, 0);
+	chat.setMail("Chat", "all", "Добро пожаловать в чат!");
+	chat.setMail("Denis", "all", "Добрый день, меня зовут Денис.");
+	chat.setMail("Julia", "all", "Добрый день, я Юля :)");
+	chat.setMail("Denis", "Julia", "Привет Юля, как дела?");
+	chat.setMail("Julia", "Denis", "Привет Дениска, давно не сляшала тебя, у меня все хорошо, как сам?");
+
+	while (true)
+	{
+
+		std::cout << "Вход в чат. Для завершения работы чата наберите (q)\nНапишите ваше имя: ";
+		std::string login;
+		std::cin >> login;
+		if (login == "q" || login == "Q") return 0;
+
+		for (int i = 0; i < lenght; i++)
+		{
+			if (usr.getUser(i) == login)
+			{
+				while (true)
+				{
+					std::string psw;
+					std::cout << "Введите ваш пароль: ";
+					std::cin >> psw;
+					if (psw == usr.getPassword(i)) break;
+				}
+				break;
+			}
+			else if (usr.getUser(i) == "")
+			{
+				std::string psw;
+				std::cout << "Добавление нового пользователя с логином: " << login << std::endl;
+				std::cout << "Придумайте пароль : ";
+				std::cin >> psw;
+				usr.setUser(login, i);
+				usr.setPassword(psw, i);
+				std::cout << "Зарегистрирован новый пользователь.\n\n";
+				break;
+			}
+
+		}
+		std::cout << "История чата:\n";
+		chat.getMail(login);
+		std::cout << "Далее пишите ваши сообщения,для выхода наберите (q).\n";
+
+		std::string msg;
+		std::string post;
+
+		while (true)
+		{
+			std::cout << "[" << login << "]: ";
+			std::cin >> msg;
+			if (msg == "q" || msg == "Q") break;
+			std::cout << "Напишите имя получателя (all - всем): ";
+			std::cin >> post;
+			chat.setMail(login, post, msg);
+		}
+		std::cout << "Chat => " << login << " : Досвидания, до новых встреч.\n";
+	}
+
 	
-
 	return 0;
 }
