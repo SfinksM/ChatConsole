@@ -3,6 +3,7 @@
 #include <string>
 
 
+
 Chat::Chat(int lenght) : _lenght{ lenght }
 {
 	_sender = new std::string[lenght]{};
@@ -86,9 +87,13 @@ void Chat::getMail(std::string post) const
 {
 	for (int i = 0; i < _lenght; i++)
 	{
-		if (_post[i] == post || _post[i] == "all")
+		if (_post[i] == "all" || _post[i] == "всем")
 		{
-			std::cout << _sender[i] << " => " << _post[i] << " : " << _mail[i] << std::endl;
+			std::cout << _sender[i] << " => " << _mail[i] << std::endl;
+		}
+		if (_post[i] == post)
+		{
+			std::cout << "Персональное сообщение для вас от: " << _sender[i] << " => " << _mail[i] << std::endl;
 		}
 	}
 }

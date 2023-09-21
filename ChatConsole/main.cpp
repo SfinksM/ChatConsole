@@ -1,77 +1,81 @@
 #include <iostream>
 #include <string>
+#include <Windows.h>
 #include "users.h"
 #include "chat.h"
 
+using namespace std;
 
 int main()
 {
 	setlocale(LC_ALL, "");
+	SetConsoleCP(1251); // установка кодовой страницы win-cp 1251 в поток ввода
+	SetConsoleOutputCP(1251); // установка кодовой страницы win-cp 1251 в поток вывода
 
-	const int lenght = 20;
-	User usr(lenght);
-	usr.setUser("Denis", 0);
-	usr.setPassword("111", 0);
-	usr.setUser("Julia", 1);
-	usr.setPassword("000", 1);
-	Chat chat(0);
-	chat.setMail("Chat", "all", "Добро пожаловать в чат!");
-	chat.setMail("Denis", "all", "Добрый день, меня зовут Денис.");
-	chat.setMail("Julia", "all", "Добрый день, я Юля :)");
-	chat.setMail("Denis", "Julia", "Привет Юля, как дела?");
-	chat.setMail("Julia", "Denis", "Привет Дениска, давно не сляшала тебя, у меня все хорошо, как сам?");
+	const int lenght = 20;  // размер массива пользователей
+	User usr(lenght); // конструктор класса User, пользователей
+	usr.setUser("Денис", 0); // пользователь для теста Денис
+	usr.setPassword("111", 0); // пароль пользователя Денис
+	usr.setUser("Юля", 1); // пользователь Юля
+	usr.setPassword("000", 1); // пароль 000
+	Chat chat(0); // конструктор класса Chat, самого чата
+	chat.setMail("Чат_бот", "всем", "Добро пожаловать в чат!"); // сообщение от Чата ,всем
+	chat.setMail("Денис", "всем", "Добрый день, меня зовут Денис."); // сообщение от Дениса всем
+	chat.setMail("Юля", "всем", "Добрый день, я Юля :)"); // сообщение от Юли всем
+	chat.setMail("Денис", "Юля", "Привет Юля, как дела?"); // сообщение от Дениса Юле
+	chat.setMail("Юля", "Денис", "Привет Дениска, давно не сляшала тебя, у меня все хорошо, как сам?"); // сообщение от Юли Денису
 
-	while (true)
+	while (true) // цикл чата
 	{
 
-		std::cout << "Вход в чат. Для завершения работы чата наберите (q)\nНапишите ваше имя: ";
-		std::string login;
-		std::cin >> login;
-		if (login == "q" || login == "Q") return 0;
+		cout << "Вход в чат. Для завершения работы чата наберите (q)\nНапишите ваше имя: ";
+		string login;
+		cin >> login; // запрос имени подключившегося
+		if (login == "q" || login == "Q") return 0; // если введено "q" то завершение работы программы
 
-		for (int i = 0; i < lenght; i++)
+		for (int i = 0; i < lenght; i++) // цикл перебора имен для поиска пользователя
 		{
-			if (usr.getUser(i) == login)
+			if (usr.getUser(i) == login) // если пользователь с введенным именем найден, то
 			{
-				while (true)
+				while (true) // цикличная проверка пароля, без счетчика попыток и возможности выхода, не стал усложнять код
 				{
-					std::string psw;
-					std::cout << "Введите ваш пароль: ";
-					std::cin >> psw;
-					if (psw == usr.getPassword(i)) break;
+					string psw;
+					cout << "Введите ваш пароль: ";
+					cin >> psw; // запрос пароля найденого пользователя
+					if (psw == usr.getPassword(i)) break; // если пароль совпал то выход из цикла
 				}
 				break;
 			}
-			else if (usr.getUser(i) == "")
+			else if (usr.getUser(i) == "") // если пользователь не найден, то добавление нового
 			{
-				std::string psw;
-				std::cout << "Добавление нового пользователя с логином: " << login << std::endl;
-				std::cout << "Придумайте пароль : ";
-				std::cin >> psw;
-				usr.setUser(login, i);
-				usr.setPassword(psw, i);
-				std::cout << "Зарегистрирован новый пользователь.\n\n";
+				string psw;
+				cout << "Добавление нового пользователя с логином: " << login << std::endl;
+				cout << "Придумайте пароль : ";
+				cin >> psw; // запрос пароля для нового пользователя
+				usr.setUser(login, i); // сохранение имени нового пользователя
+				usr.setPassword(psw, i); // сохранение пароля нового пользователя
+				cout << "Зарегистрирован новый пользователь.\n\n";
 				break;
 			}
 
 		}
-		std::cout << "История чата:\n";
+		cout << "История чата:\n";
 		chat.getMail(login);
-		std::cout << "Далее пишите ваши сообщения,для выхода наберите (q).\n";
-
-		std::string msg;
-		std::string post;
+		cout << "Далее пишите ваши сообщения, для выхода наберите (q).\n";
 
 		while (true)
 		{
-			std::cout << "[" << login << "]: ";
-			std::cin >> msg;
+			cout << "[" << login << "]: ";
+			string msg; 
+			cin.ignore();
+			getline(cin, msg);
 			if (msg == "q" || msg == "Q") break;
-			std::cout << "Напишите имя получателя (all - всем): ";
-			std::cin >> post;
+			cout << "Напишите имя получателя (all(всем) - в общий чат): ";
+			string post;
+			cin >> post;
 			chat.setMail(login, post, msg);
 		}
-		std::cout << "Chat => " << login << " : Досвидания, до новых встреч.\n";
+		cout << "Chat => " << login << " : Досвидания, до новых встреч.\n";
 	}
 
 	
